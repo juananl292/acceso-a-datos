@@ -3,11 +3,33 @@ package prZoologicoDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public abstract class AnimalDAO {
 	private static Connection connection;
 	
 	
+	
+	//Borrar todos los animales
+	public static void deleteAnimal() {
+		connection = openConnection();
+		
+		String query="delete from animales";
+		Statement statement;
+		try {
+			statement = connection.createStatement();
+			statement.executeUpdate(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	
+	
+	//Insertar un animal
 	public static void insertarAnimal(Animal animal) {
 		connection = openConnection();
 		String query= "insert into animales (nombre, habitat, peso_aproximado )values(?,?,?)";

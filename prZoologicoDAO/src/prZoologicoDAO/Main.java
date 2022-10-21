@@ -6,6 +6,7 @@ public class Main {
 		// TODO Auto-generated method stub
 		Animal a= new Animal ("Ardilla", "Bosque", 0.10);
 		AnimalDAO.insertarAnimal(a);
+		AnimalDAO.deleteAnimal();
 	}
 
 }
