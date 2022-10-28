@@ -18,6 +18,10 @@ public class Temporada {
 		this.titulo = titulo;
 		this.serie = serie;
 	}
+	public Temporada() 
+	{
+		
+	}
 	public int getId() {
 		return id;
 	}

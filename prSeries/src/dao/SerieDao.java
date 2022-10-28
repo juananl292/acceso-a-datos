@@ -2,10 +2,13 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import pojo.Serie;
+
 import util.DatabaseConnection;
 
 public class SerieDao implements Dao<Serie>{
@@ -24,8 +27,30 @@ public class SerieDao implements Dao<Serie>{
 
 	@Override
 	public Serie buscarPorId(int i) {
-		// TODO Auto-generated method stub
-		return null;
+		connection = openConnection();
+		String query="select * from series where id = ?";
+		Statement statement;
+		Serie serie=null;
+	
+			 try {
+	
+				 PreparedStatement ps=connection.prepareStatement(query);
+			ps.setInt(1,i);
+			ResultSet rs=ps.executeQuery();
+			while(rs.next()) {
+				serie= new Serie(
+						rs.getInt("id"),
+						rs.getString("titulo"),
+						rs.getInt("edad"),
+						rs.getString("plataforma"));
+			}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+			
+		return serie;
 	}
 
 	@Override
