@@ -20,6 +20,8 @@ public class Main {
 		temporadaDao.insertar(t1);
 		temporadaDao.insertar(t2);
 		
+		Serie los_simpson =serieDao.buscarPorId(1); 
+		
 
 	}
 
