@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.hibernate.Session;
 
 import pojo.Animal;
@@ -22,8 +24,11 @@ public class Main {
 		
 		
 		List animales= session.createQuery("FROM Animal").getResultList();
-		
-		for(Iterator i=animales.iterator();i.hasNext();) {
+		String hql ="FROM Animal WHERE habitat = :habitat";
+		Query query= session.createQuery(hql);
+		query.setParameter("habitat", "casa");
+		List animales1=query.getResultList();
+		for(Iterator i=animales1.iterator();i.hasNext();) {
 			Animal a=(Animal)i.next();
 			System.out.println(a.getNombre());
 		}
