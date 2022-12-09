@@ -51,8 +51,35 @@ public class TemporadaDao extends ObjetoDao implements InterfazDao<Temporada>{
 	
 	@Override
 	public Temporada buscarPorId(int i) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		
+		connection = openConnection();
+		String query = "select * from temporadas where id = ?";
+		Statement statement;
+		Temporada temporada = new Temporada();
+
+		try {
+
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setInt(1, i);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				SerieDao serieDao=new SerieDao();
+				Serie s=serieDao.buscarPorId(temporada.getSerie().getId());
+				temporada = new Temporada(rs.getInt("id"), 
+						rs.getInt("num_temporadas"), 
+						rs.getString("titulo"),
+						s	
+						);
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return temporada;
+		
 	}
 
 	@Override
@@ -96,9 +123,9 @@ connection = openConnection();
 
 	@Override
 	public void borrar(Temporada temporada) {
-connection = openConnection();
+		connection = openConnection();
 		
-		String query= "delete from temporadas where serie_id="+temporada.getSerie().getId();
+		String query= "delete from temporadas where serie_id="+temporada.getSerie().getId()+"and id="+temporada.getId();
 		Statement statement;
 		try {
 			statement = connection.createStatement();
@@ -110,5 +137,19 @@ connection = openConnection();
 		closeConnection();
 		
 	}
-	
+	public void borrarPorSerie(int serie_id) {
+		connection=openConnection();
+		String query="delete from temporadas where serie_id=?";
+		try {
+			PreparedStatement ps=connection.prepareStatement(query);
+			ps.setInt(1, serie_id);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		closeConnection();
+	}
 }
