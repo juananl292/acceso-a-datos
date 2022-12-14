@@ -15,6 +15,7 @@ import pojo.Personaje;
 
 
 
+
 public class PersonajeDao extends ObjetoDao implements InterfazDao<Personaje>{
 	private static Connection connection;
 	public PersonajeDao() {
@@ -27,6 +28,7 @@ public class PersonajeDao extends ObjetoDao implements InterfazDao<Personaje>{
 		String query = "Select * from personajes";
 		Personaje personaje = null;
 		ArrayList<Personaje> listaPersonajes = new ArrayList<Personaje>();
+		ArrayList<Objeto>objetos=new ArrayList<Objeto>();
 
 		try {
 			Statement statement = connection.createStatement();
@@ -35,7 +37,26 @@ public class PersonajeDao extends ObjetoDao implements InterfazDao<Personaje>{
 				personaje = new Personaje(rs.getInt("id"), 
 						rs.getString("nombre"), 
 						rs.getString("sexo"),
-						rs.getInt("vida"));
+						rs.getInt("vida"),
+						objetos
+						);
+				
+				String query_objeto="select * from objetos where personaje_id=?";
+				PreparedStatement ps_objetos = connection.prepareStatement(query_objeto);
+				ps_objetos.setInt(1, rs.getInt("id"));
+				ResultSet rs_objetos = ps_objetos.executeQuery();
+
+				while (rs_objetos.next()) {
+					Objeto objeto = new Objeto(
+							rs_objetos.getInt("id"), 
+							rs_objetos.getString("nombre"),
+							rs_objetos.getInt("cantidad"),
+							personaje
+							);
+					objetos.add(objeto);
+				}
+				
+				personaje.setObjetos(objetos);
 				listaPersonajes.add(personaje);
 			}
 
@@ -46,7 +67,32 @@ public class PersonajeDao extends ObjetoDao implements InterfazDao<Personaje>{
 		closeConnection();
 		return listaPersonajes;
 	}
+	public Personaje buscarPorNombre(String nombre) {
+		connection = openConnection();
+		String query = "select * from personajes where nombre = ?";
+		Statement statement;
+		Personaje personaje = null;
 
+		try {
+
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setString(1, nombre);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				personaje = new Personaje(rs.getInt("id"), 
+						rs.getString("nombre"), 
+						rs.getString("sexo"),
+						rs.getInt("vida")
+						);
+				personaje.setObjetos(obtenerObjeto(personaje));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		closeConnection();
+		return personaje;
+		}
 	@Override
 	public Personaje buscarPorId(int i) {
 		connection = openConnection();
@@ -71,7 +117,7 @@ public class PersonajeDao extends ObjetoDao implements InterfazDao<Personaje>{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		closeConnection();
 		return personaje;
 	}
 	
@@ -142,9 +188,40 @@ connection = openConnection();
 	}
 
 	@Override
-	public void borrar(Personaje t) {
-		// TODO Auto-generated method stub
+	public void borrar(Personaje personaje) {
 		
+		int personaje_id = personaje.getId();
+
+		UbjetoDao temp = new UbjetoDao();
+		temp.borrarPorPersonaje(personaje_id);
+
+		connection = openConnection();
+		String query = "delete from personajes where id=?";
+		try {
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setInt(1, personaje_id);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		closeConnection();
+	}
+	public void vaciarTablas() {
+		connection = openConnection();
+		String query = "TRUNCATE TABLE objetos";
+		try {
+			Statement st= connection.prepareStatement(query);
+			st.executeUpdate(query);
+			String query2 = "TRUNCATE TABLE objetos";
+			 st= connection.prepareStatement(query2);
+			st.executeUpdate(query2);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		closeConnection();
 	}
 
 }

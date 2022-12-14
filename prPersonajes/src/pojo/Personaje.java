@@ -67,8 +67,9 @@ public class Personaje {
 	}
 	@Override
 	public String toString() {
-		return "Personaje [id=" + id + ", nombre=" + nombre + ", sexo=" + sexo + ", vida=" + vida + ", objetos="
-				+ objetos + "]";
+		return "Personaje id=" + id + ",\n nombre=" + nombre + ",\n sexo=" + sexo + ",\n vida=" + vida + ",\n objetos="
+				+ objetos ;
 	}
+	
 	
 }

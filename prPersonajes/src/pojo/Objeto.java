@@ -18,6 +18,9 @@ public class Objeto {
 		this.cantidad = cantidad;
 		this.personaje = personaje;
 	}
+	public Objeto() {
+		
+	}
 	public String getNombre() {
 		return nombre;
 	}
@@ -41,7 +44,7 @@ public class Objeto {
 	}
 	@Override
 	public String toString() {
-		return "Objeto [id=" + id + ", nombre=" + nombre + ", cantidad=" + cantidad + ", personaje=" + personaje + "]";
+		return "Objeto id=" + this.id + ", nombre=" + this.nombre + ", cantidad=" + this.cantidad + "\n";
 	}
 	
 	
