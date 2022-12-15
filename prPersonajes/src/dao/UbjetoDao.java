@@ -92,6 +92,8 @@ public class UbjetoDao extends ObjetoDao implements InterfazDao<Objeto>{
 		}
 		closeConnection();
 	}
+	
+	
 
 	@Override
 	public void modificar(Objeto t) {
@@ -106,6 +108,7 @@ connection = openConnection();
 			ps.setString(2, t.getNombre());
 			ps.setInt(3, t.getCantidad());
 			ps.setInt(4, t.getPersonaje().getId());
+			ps.setInt(5, t.getId());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -119,7 +122,7 @@ connection = openConnection();
 connection = openConnection();
 		
 		
-		String query= "delete from objetos where personaje_id="+objeto.getPersonaje().getId()+"and id="+objeto.getId();
+		String query= "delete from objetos where id="+objeto.getId();
 		Statement statement;
 		try {
 			statement = connection.createStatement();

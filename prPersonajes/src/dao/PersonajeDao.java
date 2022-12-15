@@ -210,13 +210,21 @@ connection = openConnection();
 	}
 	public void vaciarTablas() {
 		connection = openConnection();
-		String query = "TRUNCATE TABLE objetos";
+		String query = "delete from objetos";
 		try {
 			Statement st= connection.prepareStatement(query);
 			st.executeUpdate(query);
-			String query2 = "TRUNCATE TABLE objetos";
+			String query2 = "delete from personajes";
 			 st= connection.prepareStatement(query2);
 			st.executeUpdate(query2);
+			
+			String query3 = "alter table objetos auto_increment=1 ";
+			 st= connection.prepareStatement(query3);
+			st.executeUpdate(query3);
+			
+			String query4 = "alter table personajes auto_increment=1 ";
+			 st= connection.prepareStatement(query4);
+			st.executeUpdate(query4);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
